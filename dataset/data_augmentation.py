@@ -10,7 +10,7 @@ data_transforms = transforms.Compose([
     transforms.ToTensor()               # Convert images to PyTorch tensors
 ])
 
-
+# PATH OF data set
 dataset_dir = 'dataset/test'
 
 # Load dataset with data augmentation
@@ -19,6 +19,6 @@ dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
 
 data_iter = iter(dataloader)
-images, labels = data_iter.next()
+images, labels = next(data_iter)
 
 
