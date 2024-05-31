@@ -47,7 +47,7 @@ def has_low_sharpness(image, threshold=50):
 
 
 def clean_image(image_path, size=(48, 48)):
-    image = Image.open(image_path).convert('RGB')
+    image = Image.open(image_path).convert('L')
 
     # Resize image
     image = image.resize(size)
