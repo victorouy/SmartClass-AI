@@ -1,15 +1,17 @@
-# This file is for the data visualization
+# This file is for the data visualization. Running this script will create a bar graph to show the number of images in
+# each class. It will also create a histogram for each class that will show the aggregated pixel intensities. It will
+# also create pixel intensity histograms of 15 randomly sampled images of each class.
 
 import os
 import matplotlib.pyplot as plt
 from PIL import Image
-import numpy as np
 import random
 
 
 # Method for bar graph creation of the different classes
 def classDistribution(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
+    # list of paths for the folders
     directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
 
     # Find nb of images in each class
@@ -26,7 +28,9 @@ def classDistribution(dataset):
 # Method to create histograms of the pixel intensities of the different classes
 def pixelIntensityDistribution(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
+    # For the colors of the histograms
     colors = ['red', 'green', 'blue', 'gray']
+    # list of paths for the folders
     directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
 
     plt.figure(figsize=(10, 10))
@@ -62,6 +66,7 @@ def pixelIntensityDistribution(dataset):
 # Method to show pixel intensity distribution for 15 randomly sampled images of each class
 def sampleImages(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
+    #list of paths for the folders
     directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
 
     for number, dir in enumerate(directories):
@@ -92,7 +97,6 @@ def sampleImages(dataset):
                 i += 1
 
         fig.suptitle(f'Pixel Intensity for {classes[number]} sample images in {dataset} dataset')
-
     plt.show()
 
 
