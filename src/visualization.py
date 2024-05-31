@@ -10,7 +10,7 @@ import random
 # Class for bar graph creation of the different classes
 def classDistribution(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
-    directories = [f'../dataset/{dataset}/{expression}' for expression in classes]
+    directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
 
     # Find nb of images in each class
     nb_images = [len(os.listdir(dir)) for dir in directories]
@@ -27,7 +27,7 @@ def classDistribution(dataset):
 def pixelIntensityDistribution(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
     colors = ['red', 'green', 'blue', 'gray']
-    directories = [f'../dataset/{dataset}/{expression}' for expression in classes]
+    directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
 
     plt.figure(figsize=(10, 10))
 
@@ -60,7 +60,7 @@ def pixelIntensityDistribution(dataset):
 
 def sampleImages(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
-    directories = [f'../dataset/{dataset}/{expression}' for expression in classes]
+    directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
 
     fig, axes = plt.subplots(4, 30, figsize=(30, 16))
 
