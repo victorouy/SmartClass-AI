@@ -7,7 +7,7 @@ import numpy as np
 import random
 
 
-# Class for bar graph creation of the different classes
+# Method for bar graph creation of the different classes
 def classDistribution(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
     directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
@@ -23,7 +23,7 @@ def classDistribution(dataset):
     plt.title(f'Number of Images in each Class for {dataset} Dataset')
     plt.show()
 
-# Class to create histograms of the pixel intensities of the different classes
+# Method to create histograms of the pixel intensities of the different classes
 def pixelIntensityDistribution(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
     colors = ['red', 'green', 'blue', 'gray']
@@ -40,7 +40,8 @@ def pixelIntensityDistribution(dataset):
         for file_name in os.listdir(dir):
             # Get the image
             img = Image.open(os.path.join(dir, file_name))
-
+            
+            # Extra measure to check if image is in grayscale
             if img.mode != 'L':
                 img = img.convert('L')
 
@@ -58,6 +59,7 @@ def pixelIntensityDistribution(dataset):
     plt.show()
 
 
+# Method to show pixel intensity distribution for 15 randomly sampled images of each class
 def sampleImages(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
     directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
