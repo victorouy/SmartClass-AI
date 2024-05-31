@@ -64,14 +64,16 @@ def sampleImages(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
     directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
 
-    fig, axes = plt.subplots(4, 30, figsize=(30, 16))
-
-    for i, dir in enumerate(directories):
+    for number, dir in enumerate(directories):
+        fig, axes = plt.subplots(5, 6, figsize=(30, 16))
+        #coordinates for figure grid
+        i = 0
+        j = 0
         image_names = os.listdir(dir)
         # Select 15 random images
         rand_images = random.sample(image_names, 15)
 
-        for j, image_name in enumerate(rand_images):
+        for image_name in rand_images:
             # Obtain the image
             img = Image.open(os.path.join(dir, image_name))
             # Get histogram of image
@@ -81,15 +83,19 @@ def sampleImages(dataset):
             axes[i, 2*j].imshow(img, cmap='gray')
             axes[i, 2*j].axis('off')
             axes[i, 2*j+1].bar(range(256), histogram)
-            axes[i, 2*j+1].axis('off')
-        axes[i, 0].set_title(classes[i])
+
+            # Increment coordinates
+            if j < 2:
+                j += 1
+            else:
+                j = 0
+                i += 1
+
+        fig.suptitle(f'Pixel Intensity for {classes[number]} sample images in {dataset} dataset')
 
     plt.show()
 
 
 classDistribution('train')
-classDistribution('test')
 pixelIntensityDistribution('train')
-pixelIntensityDistribution('test')
 sampleImages('train')
-sampleImages('test')
