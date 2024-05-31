@@ -47,6 +47,7 @@ def has_low_sharpness(image, threshold=50):
 
 
 def clean_image(image_path, size=(48, 48)):
+    # Converts image to B&W
     image = Image.open(image_path).convert('L')
 
     # Resize image
@@ -87,7 +88,7 @@ def clean_image(image_path, size=(48, 48)):
     return image
 
 
-def clean_dataset(dataset_dir, size=(48, 48)):
+def clean_dataset(dataset_dir, size=(64, 64)):
     print('Started Cleaning...')
     for root, dirs, files in os.walk(dataset_dir):
         for dir_name in dirs:
