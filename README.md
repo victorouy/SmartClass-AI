@@ -1,5 +1,8 @@
 # COMP-472-Project
 
+# Github
+https://github.com/jungsoolee1/COMP-472-Project
+
 ## Team AK_18
 Data Specialist: Nadim Khalife
 
@@ -21,7 +24,7 @@ Originality Form folder: Signed Expectation of Originality forms from each team 
 
 dataset folder: Folder containing the dataset images
 
-dataset-cleaned folder: Folder containing the dataset images that are cleaned from running the DataCleaning.py script
+dataset-cleaned folder: Folder created after running DataCleaning.py that contains the cleaned dataset images 
 
 
 ### The following steps are assuming you are running our code with the same folder hierarchy as shown in our Github repository.
