@@ -1,10 +1,10 @@
+# This script cleans the dataset of photos to maintain consistency in the evaluation and training of data
+# It standardizes the resolution (size), labelling/naming, sharpness, contrast, and brightness
+
 import os
+import shutil
 from PIL import Image, ImageEnhance, ImageStat
 
-# def has_high_black_values(image, threshold=150):
-#     stat = ImageStat.Stat(image)
-#     min_pixel_value = stat.extrema[0][0]
-#     return min_pixel_value < threshold
 
 def get_brightness(image):
     stat = ImageStat.Stat(image)
@@ -17,7 +17,6 @@ def get_contrast(image):
     return stddev
 
 def get_sharpness(image):
-    image = image.convert("L")  # Convert to grayscale
     stat = ImageStat.Stat(image)
     return stat.stddev[0]
 
@@ -29,13 +28,16 @@ def has_low_brightness(image, threshold=100):
     brightness = get_brightness(image)
     return brightness < threshold, brightness
 
+
 def has_high_contrast(image, threshold=175):
     contrast = get_contrast(image)
     return contrast > threshold, contrast
 
+
 def has_low_contrast(image, threshold=60):
     contrast = get_contrast(image)
     return contrast < threshold, contrast
+
 
 def has_high_sharpness(image, threshold=150):
     sharpness = get_sharpness(image)
@@ -46,7 +48,8 @@ def has_low_sharpness(image, threshold=50):
     return sharpness < threshold, sharpness
 
 
-def clean_image(image_path, size=(48, 48)):
+# Responsible for determining whether cleaning is necessary for a particular image and adjusts it accordingly
+def clean_image(image_path, size=(64, 64)):
     # Converts image to B&W
     image = Image.open(image_path).convert('L')
 
@@ -88,9 +91,18 @@ def clean_image(image_path, size=(48, 48)):
     return image
 
 
+# Deals with labelling/renaming and copying images/directories
 def clean_dataset(dataset_dir, size=(64, 64)):
     print('Started Cleaning...')
-    for root, dirs, files in os.walk(dataset_dir):
+    cleaned_dataset_dir = os.path.join(os.path.dirname(dataset_dir), str(dataset_dir) + "-cleaned")
+
+    # Remove the existing "dataset-cleaned" directory if it exists
+    if os.path.exists(cleaned_dataset_dir):
+        shutil.rmtree(cleaned_dataset_dir)
+
+    shutil.copytree(dataset_dir, cleaned_dataset_dir)
+
+    for root, dirs, files in os.walk(cleaned_dataset_dir):
         for dir_name in dirs:
             count = 0
             full_dir_path = os.path.join(root, dir_name)
@@ -104,12 +116,8 @@ def clean_dataset(dataset_dir, size=(64, 64)):
                     file_extension = os.path.splitext(file)[1]
 
                     # Create new file name and ensure it's unique
-                    while True:
-                        new_file_name = f"{parent_folder}-{dir_name}_{count:04d}{file_extension}"
-                        new_file_path = os.path.join(full_dir_path, new_file_name)
-                        if not os.path.exists(new_file_path):
-                            break
-                        count += 1
+                    new_file_name = f"{parent_folder}-{dir_name}_{count:04d}{file_extension}"
+                    new_file_path = os.path.join(full_dir_path, new_file_name)
 
                     # Save the cleaned image with the new name
                     cleaned_image.save(new_file_path)
@@ -121,6 +129,8 @@ def clean_dataset(dataset_dir, size=(64, 64)):
     print('Completed Cleaning.')
 
 
-dataset_dir = 'dataset'  # Update this path to your dataset directory
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+dataset_dir = os.path.join(parent_dir, 'dataset')  # Finds 'dataset' in the parent directory
 
 clean_dataset(dataset_dir)
