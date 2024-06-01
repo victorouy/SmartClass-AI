@@ -11,7 +11,7 @@ Evaluation Specialist: Victor-Thyreth Ouy
 
 
 ## Content of the submission
-src/DataCleaning.py : Python script for data cleaning of our dataset
+<ins>src/DataCleaning.py<ins> : Python script for data cleaning of our dataset
 
 src/visualization.py : Python script to create the data visualization 
 
