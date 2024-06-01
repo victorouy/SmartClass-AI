@@ -11,19 +11,19 @@ Evaluation Specialist: Victor-Thyreth Ouy
 
 
 ## Content of the submission
-<ins>src/DataCleaning.py<ins> : Python script for data cleaning of our dataset
+<ins>src/DataCleaning.py</ins> : Python script for data cleaning of our dataset
 
-src/visualization.py : Python script to create the data visualization 
+<ins>src/visualization.py</ins>: Python script to create the data visualization 
 
-dataset_information.md : Document detailing the sources and licensing of our dataset (https://www.kaggle.com/datasets/msambare/fer2013)
+<ins>dataset_information.md</ins>: Document detailing the sources and licensing of our dataset (https://www.kaggle.com/datasets/msambare/fer2013)
 
-AI Project Part 1 - Report.pdf : Project Report
+<ins>AI Project Part 1 - Report.pdf</ins>: Project Report
 
-Originality Form folder: Signed Expectation of Originality forms from each team member
+<ins>Originality Form folder</ins>: Signed Expectation of Originality forms from each team member
 
-dataset folder: Folder containing the dataset images
+<ins>dataset folder</ins>: Folder containing the dataset images
 
-dataset-cleaned folder: Folder created after running DataCleaning.py that contains the cleaned dataset images 
+<ins>dataset-cleaned folder</ins>: Folder created after running DataCleaning.py that contains the cleaned dataset images 
 
 
 ## How To Run Python Scripts
