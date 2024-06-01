@@ -7,16 +7,22 @@ Training Specialist: Jungsoo Lee
 
 Evaluation Specialist: Victor-Thyreth Ouy
 
+
 ## Content of the submission
-main.py : Python script for data cleaning of our dataset
+src/DataCleaning.py : Python script for data cleaning of our dataset
 
-visualization.py : Python script to create the data visualization
+src/visualization.py : Python script to create the data visualization 
 
-_______________________ : Document detailing the sources of our dataset
+dataset_information.md : Document detailing the sources and licensing of our dataset (https://www.kaggle.com/datasets/msambare/fer2013)
 
-_______________________.pdf : Project Report
+AI Project Part 1 - Report.pdf : Project Report
 
-Originality Form folder : Signed Expectation of Originality forms from each team member
+Originality Form folder: Signed Expectation of Originality forms from each team member
+
+dataset folder: Folder containing the dataset images
+
+dataset-cleaned folder: Folder containing the dataset images that are cleaned from running the DataCleaning.py script
+
 
 ### The following steps are assuming you are running our code with the same folder hierarchy as shown in our Github repository.
 
@@ -27,8 +33,10 @@ Originality Form folder : Signed Expectation of Originality forms from each team
 4. Enter `pip install -r requirements.txt` to install packages.
 
 
-## Steps to execute code for data cleaning
-**TO BE COMPLETED**
+## Steps to execute code for data cleaning + labeling
+1. From the root folder, enter `cd src`.
+2. Enter `python DataCleaning.py` to execute the script.
+3. This script will create or replace a folder in the root dir called 'dataset-cleaned'
 
 ## Steps to execute code for data visualization
 1. From the root folder, enter `cd src`.
