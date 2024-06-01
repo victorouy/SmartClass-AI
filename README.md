@@ -26,7 +26,8 @@ dataset folder: Folder containing the dataset images
 dataset-cleaned folder: Folder created after running DataCleaning.py that contains the cleaned dataset images 
 
 
-## Note: The following steps are assuming you are running our code with the same folder hierarchy as shown in our Github repository.
+## How To Run Python Scripts
+Note: The following steps are assuming you are running our code with the same folder hierarchy as shown in our Github repository.
 
 ### First step to executing any code. Creating a virtual environment using pip
 1. Make sure you are in the root folder when typing commands in the terminal.
