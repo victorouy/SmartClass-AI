@@ -27,10 +27,7 @@ from sklearn.model_selection import train_test_split
 #         return self.__data.shape[0]
 
 
-
-#NADIM CODE ----------------------------------------------------------
-
-def fetchData():
+def fetchData2():
     path = 'dataset-cleaned/'
     allaimges = []
     clsLabel = []
@@ -51,8 +48,6 @@ def fetchData():
     return X_train, X_valid, X_test, y_train, y_valid, y_test
 
 
-
-#END NADIM CODE ----------------------------------------------------------
 
 class Pclass(Dataset):
     def __init__(self, X, y):
@@ -98,23 +93,38 @@ class MultiLayerFCNet(nn.Module):
         # self.fc2 = nn.Linear(hidden_size, hidden_size)
         # self.fc3 = nn.Linear(hidden_size, output_size)
 
-        self.layer1=nn.Conv2d(1,32,3,padding=1,stride=1)
+        
+        # Variant Kernel size 6x6 (larger kernel)
+        self.layer1 = nn.Conv2d(1, 32, 6, padding=2, stride=1) 
         self.B1 = nn.BatchNorm2d(32)
-        self.layer2 = nn.Conv2d(32, 32, 3, padding=1, stride=1)
+        self.layer2 = nn.Conv2d(32, 32, 6, padding=2, stride=1)
         self.B2 = nn.BatchNorm2d(32)
-        self.Maxpool=nn.MaxPool2d(2)
-        self.layer3 = nn.Conv2d(32, 64, 3, padding=1, stride=1)
+        self.Maxpool = nn.MaxPool2d(2)
+        self.layer3 = nn.Conv2d(32, 64, 6, padding=2, stride=1) 
         self.B3 = nn.BatchNorm2d(64)
-        self.layer4 = nn.Conv2d(64, 64, 3, padding=1, stride=1)
+        self.layer4 = nn.Conv2d(64, 64, 6, padding=2, stride=1)  
         self.B4 = nn.BatchNorm2d(64)
-
-        self.layer5 = nn.Conv2d(64, 128, 3, padding=1, stride=1)
+        self.layer5 = nn.Conv2d(64, 128, 6, padding=2, stride=1)  
         self.B5 = nn.BatchNorm2d(128)
-
-        self.layer6 = nn.Conv2d(128, 256, 3, padding=1, stride=1)
+        self.layer6 = nn.Conv2d(128, 256, 6, padding=2, stride=1)  
         self.B6 = nn.BatchNorm2d(256)
+        self.fc = nn.Linear(4 * 4 * 256, output_size)
 
-
+        # Variant Kernel size 2x2 (smaller kernel)
+        # self.layer1 = nn.Conv2d(1, 32, 2, padding=1, stride=1)  
+        # self.B1 = nn.BatchNorm2d(32)
+        # self.layer2 = nn.Conv2d(32, 32, 2, padding=1, stride=1)  
+        # self.B2 = nn.BatchNorm2d(32)
+        # self.Maxpool = nn.MaxPool2d(2)
+        # self.layer3 = nn.Conv2d(32, 64, 2, padding=1, stride=1)  
+        # self.B3 = nn.BatchNorm2d(64)
+        # self.layer4 = nn.Conv2d(64, 64, 2, padding=1, stride=1)  
+        # self.B4 = nn.BatchNorm2d(64)
+        # self.layer5 = nn.Conv2d(64, 128, 2, padding=1, stride=1)  
+        # self.B5 = nn.BatchNorm2d(128)
+        # self.layer6 = nn.Conv2d(128, 256, 2, padding=1, stride=1)  
+        # self.B6 = nn.BatchNorm2d(256)
+        # self.fc = nn.Linear(4 * 4 * 256, output_size)
 
         self.fc = nn.Linear(4 * 4 * 256, output_size)
 
@@ -125,17 +135,14 @@ class MultiLayerFCNet(nn.Module):
 
 
         x = self.B1(F.leaky_relu(self.layer1(x)))
-        x =  self.Maxpool(F.leaky_relu(self.layer2(x)))
-        x=self.B2(x)
-        x=self.B3(self.Maxpool(F.leaky_relu(self.layer3(x))))
-        x = self.B4(self.Maxpool(F.leaky_relu(self.layer4(x))))
+        x = self.Maxpool(F.leaky_relu(self.layer2(x)))
+        x = self.B2(self.Maxpool2(x))
+        x = x.view(x.size(0), -1)
+        x = self.dropout(x)
+        x = self.fc(x)
 
 
-        x = self.B5((F.leaky_relu(self.layer5(x))))
-        x = self.B6(self.Maxpool(F.leaky_relu(self.layer6(x))))
-
-
-        return self.fc(x.view(x.size(0),-1))
+        return x
 
 if __name__ == '__main__':
 
@@ -145,9 +152,10 @@ if __name__ == '__main__':
     hidden_size = 50  # Number of hidden units
     output_size = 4  # Number of output classes (Our data set has 4 classes)
     epochs = 20
+    patience = 5 
 
 
-    X_train, X_valid, X_test, y_train, y_valid, y_test = fetchData()
+    X_train, X_valid, X_test, y_train, y_valid, y_test = fetchData2()
     trainset=Pclass(X_train, y_train)
     train_loader = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8, drop_last=True)
 
@@ -168,7 +176,10 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     BestACC=0
-    
+    best_loss = float('inf')  # Initialize best loss
+    patience_counter = 0  # Initialize patience counter
+
+
     for epoch in range(epochs):
         model.train()
         running_loss = 0
@@ -182,26 +193,41 @@ if __name__ == '__main__':
 
             running_loss += loss.item()
 
-        print(f'Epoch [{epoch+1}/{epochs}], Loss: {running_loss/len(train_loader):.4f}')
+        print(f'Epoch [{epoch+1}/{epochs}], Training Loss: {running_loss/len(train_loader):.4f}')
 
         model.eval()
+        correct = 0
+        total = 0
+        val_loss=0
         with torch.no_grad():
-            correct = 0
-            total = 0
 
-            for instances, labels in test_loader:
+            for instances, labels in valid_loader:
                 instances, labels = instances.to(device), labels.to(device)
                 output = model(instances)
+                loss = criterion(output, labels)
+                val_loss += loss.item()
                 _, predicted = torch.max(output.data, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
 
-
+            val_loss /= len(valid_loader)
             ACC = 100 * correct / total
-            print(f'Accuracy: {ACC:.2f}%')
-            if ACC > BestACC:
-                BestACC = ACC
+            print(f'Validation Loss: {val_loss:.4f}, Validation Accuracy: {ACC:.2f}%')
+
+            # Check for early stopping based on validation loss
+            if val_loss < best_loss:
+                best_loss = val_loss
+                patience_counter = 0
                 torch.save(model.state_dict(), 'best_model.pth')
+            else:
+                patience_counter += 1
+                if patience_counter >= patience:
+                    print("Early stopping triggered")
+                    break
+            # print(f'Accuracy: {ACC:.2f}%')
+            # if ACC > BestACC:
+            #     BestACC = ACC
+            #     torch.save(model.state_dict(), 'best_model.pth')
                 # torch.save(model.state_dict())
                 # torch.save(model.state_dict(), 'path')
         model.train()
@@ -209,3 +235,17 @@ if __name__ == '__main__':
 
 
 
+    # Evaluate on test set using the model with best validation loss
+    model.load_state_dict(torch.load('best_model.pth'))
+    model.eval()
+    test_correct = 0
+    test_total = 0
+    with torch.no_grad():
+        for instances, labels in test_loader:
+            instances, labels = instances.to(device), labels.to(device)
+            output = model(instances)
+            _, predicted = torch.max(output.data, 1)
+            test_total += labels.size(0)
+            test_correct += (predicted == labels).sum().item()
+    test_accuracy = 100 * test_correct / test_total
+    print(f'Test Accuracy: {test_accuracy:.2f}%')

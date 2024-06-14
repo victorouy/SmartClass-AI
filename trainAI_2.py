@@ -8,7 +8,6 @@ import PIL.Image as Image
 import torchvision.transforms as transforms
 from sklearn.model_selection import train_test_split
 
-
 # Function to load CIFAR10 dataset
 
 
@@ -27,67 +26,59 @@ from sklearn.model_selection import train_test_split
 #         return self.__data.shape[0]
 
 
-
-#NADIM CODE ----------------------------------------------------------
-
-def fetchData():
-    path = 'dataset-cleaned/'
-    allaimges = []
-    clsLabel = []
-
-    for idx, cls in enumerate(['angry', 'engaged', 'happy', 'neutral']):
-        Cpath = os.path.join(path, cls)
-        F = os.listdir(Cpath)
-        for im in F:
-            allaimges.append(os.path.join(Cpath, im))
-            clsLabel.append(idx)
-
-    # Split data into 70% train and 30% temporary (to be split further into validation and test)
-    X_train, X_temp, y_train, y_temp = train_test_split(allaimges, clsLabel, test_size=0.30, random_state=42, stratify=clsLabel)
-
-    # Split the temporary set into 50% validation and 50% test (15% each of the total dataset)
-    X_valid, X_test, y_valid, y_test = train_test_split(X_temp, y_temp, test_size=0.50, random_state=42, stratify=y_temp)
-
-    return X_train, X_valid, X_test, y_train, y_valid, y_test
-
-
-
-#END NADIM CODE ----------------------------------------------------------
-
 class Pclass(Dataset):
-    def __init__(self, X, y):
-
-        # path='dataset-cleaned/'
-        # path = os.path.join(path, mode)
-        self.allaimges= X
-        self.clsLabel= y
-        # for idx,cls in enumerate(['angry','engaged','happy','neutral']) :
-        #     Cpath=os.path.join(path,cls)
-
-        #     F=os.listdir(Cpath)
-
-        #     for im in F:
-        #         self.allaimges.append(os.path.join(Cpath,im))
-        #         self.clsLabel.append(idx)
-
-        # img_mean = [0.485, 0.456, 0.406]
-        # img_std = [0.229, 0.224, 0.225]
-        self.mytransform = transforms.Compose([transforms.Resize(size=(64, 64)),
-                                            transforms.ToTensor(),
-                                            transforms.Normalize(mean=[0.5], std=[0.5])  # Normalize
-                                           ])
-
+    def __init__(self, image_paths, labels, transform=None):
+        self.image_paths = image_paths
+        self.labels = labels
+        self.transform = transform
 
     def __len__(self):
-        return len(self.allaimges)
-
+        return len(self.image_paths)    
+    
     def __getitem__(self, idx):
+        img_path = self.image_paths[idx]
+        image = Image.open(img_path).convert('L')  # Convert to grayscale
+        label = self.labels[idx]
 
+        if self.transform:
+            image = self.transform(image)
 
-        Im = self.mytransform(Image.open(self.allaimges[idx]).convert('L'))
-        Cls=self.clsLabel[idx]
+        return image, label
 
-        return Im,Cls
+    def load_dataset(root_path):
+        image_paths = []
+        labels = []
+        class_names = ['angry', 'engaged', 'happy', 'neutral']
+        for idx, class_name in enumerate(class_names):
+            class_dir = os.path.join(root_path, class_name)
+            for img_name in os.listdir(class_dir):
+                image_paths.append(os.path.join(class_dir, img_name))
+                labels.append(idx)
+        return image_paths, labels
+
+    # Load the dataset
+    train_paths, train_labels = load_dataset('dataset-cleaned/train')
+    test_paths, test_labels = load_dataset('dataset-cleaned/test')
+
+    # Split train data into train and validation sets
+    train_paths, val_paths, train_labels, val_labels = train_test_split(train_paths, train_labels, test_size=0.2, stratify=train_labels, random_state=42)
+
+    # Transform
+    transform = transforms.Compose([
+        transforms.Resize((64, 64)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5], std=[0.5])
+    ])
+
+    # Create Dataset objects
+    train_dataset = Pclass(train_paths, train_labels, transform=transform)
+    val_dataset = Pclass(val_paths, val_labels, transform=transform)
+    test_dataset = Pclass(test_paths, test_labels, transform=transform)
+
+    # DataLoaders
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, num_workers=8, drop_last=True)
+    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False, num_workers=8, drop_last=True)
+    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False, num_workers=8, drop_last=True)
 
 
 class MultiLayerFCNet(nn.Module):
@@ -146,19 +137,6 @@ if __name__ == '__main__':
     output_size = 4  # Number of output classes (Our data set has 4 classes)
     epochs = 20
 
-
-    X_train, X_valid, X_test, y_train, y_valid, y_test = fetchData()
-    trainset=Pclass(X_train, y_train)
-    train_loader = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8, drop_last=True)
-
-    testset = Pclass(X_test, y_test)
-    test_loader = DataLoader(testset, batch_size=test_batch_size, shuffle=False, num_workers=8, drop_last=True)
-
-    validset = Pclass(X_valid, y_valid)
-    valid_loader = DataLoader(validset, batch_size=test_batch_size, shuffle=False, num_workers=8, drop_last=True)  
-
-
-
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     model = MultiLayerFCNet(input_size, hidden_size, output_size)
     model = nn.DataParallel(model)
@@ -185,26 +163,40 @@ if __name__ == '__main__':
         print(f'Epoch [{epoch+1}/{epochs}], Loss: {running_loss/len(train_loader):.4f}')
 
         model.eval()
+        val_correct = 0
+        val_total = 0
         with torch.no_grad():
-            correct = 0
-            total = 0
 
-            for instances, labels in test_loader:
+            for instances, labels in val_loader:
                 instances, labels = instances.to(device), labels.to(device)
                 output = model(instances)
                 _, predicted = torch.max(output.data, 1)
-                total += labels.size(0)
-                correct += (predicted == labels).sum().item()
-
-
-            ACC = 100 * correct / total
-            print(f'Accuracy: {ACC:.2f}%')
-            if ACC > BestACC:
-                BestACC = ACC
-                torch.save(model.state_dict(), 'best_model.pth')
-                # torch.save(model.state_dict())
-                # torch.save(model.state_dict(), 'path')
+                val_total += labels.size(0)
+                val_correct += (predicted == labels).sum().item()
+        val_accuracy = 100 * val_correct / val_total
+        print(f'Validation Accuracy: {val_accuracy:.2f}%')
+        if val_accuracy > BestACC:
+            BestACC = val_accuracy
+            torch.save(model.state_dict(), 'best_model.pth')
         model.train()
+
+        print(f'Best Validation Accuracy: {BestACC:.2f}%')
+
+    # Evaluate on test set
+    model.load_state_dict(torch.load('best_model.pth'))
+    model.eval()
+    test_correct = 0
+    test_total = 0
+    with torch.no_grad():
+        for instances, labels in test_loader:
+            instances, labels = instances.to(device), labels.to(device)
+            output = model(instances)
+            _, predicted = torch.max(output.data, 1)
+            test_total += labels.size(0)
+            test_correct += (predicted == labels).sum().item()
+    test_accuracy = 100 * test_correct / test_total
+    print(f'Test Accuracy: {test_accuracy:.2f}%')
+
 
 
 
