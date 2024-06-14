@@ -141,7 +141,7 @@ if __name__ == '__main__':
     hidden_size = 50  # Number of hidden units
     output_size = 4  # Number of output classes (Our data set has 4 classes)
     epochs = 20
-    patience = 3 
+    patience = 5
 
 
     # X_train, X_valid, X_test, y_train, y_valid, y_test = fetchData2()
@@ -225,7 +225,7 @@ if __name__ == '__main__':
             # print(f'Accuracy: {ACC:.2f}%')
             # if ACC > BestACC:
             #     BestACC = ACC
-            #     torch.save(model.state_dict(), 'best_model.pth')
+            #     torch.save(model.state_dict(), 'best_model_main.pth')
                 # torch.save(model.state_dict())
                 # torch.save(model.state_dict(), 'path')
         model.train()

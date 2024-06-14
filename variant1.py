@@ -222,7 +222,7 @@ if __name__ == '__main__':
 
 
     # Evaluate on test set using the model with best validation loss
-    model.load_state_dict(torch.load('best_model.pth'))
+    model.load_state_dict(torch.load('best_model_variant1.pth'))
     model.eval()
     test_correct = 0
     test_total = 0
