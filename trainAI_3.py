@@ -1,4 +1,5 @@
 import torch
+import pickle
 import numpy as np
 from torch.utils.data import Dataset, DataLoader
 from torch import optim, nn
@@ -143,7 +144,16 @@ if __name__ == '__main__':
     patience = 3 
 
 
-    X_train, X_valid, X_test, y_train, y_valid, y_test = fetchData2()
+    # X_train, X_valid, X_test, y_train, y_valid, y_test = fetchData2()
+    with open('dataset_splits.pkl', 'rb') as f:
+        splits = pickle.load(f)
+    X_train = splits['X_train']
+    X_valid = splits['X_valid']
+    X_test = splits['X_test']
+    y_train = splits['y_train']
+    y_valid = splits['y_valid']
+    y_test = splits['y_test']
+
     trainset=Pclass(X_train, y_train)
     train_loader = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8, drop_last=True)
 
@@ -206,7 +216,7 @@ if __name__ == '__main__':
             if val_loss < best_loss:
                 best_loss = val_loss
                 patience_counter = 0
-                torch.save(model.state_dict(), 'best_model.pth')
+                torch.save(model.state_dict(), 'best_model_main.pth')
             else:
                 patience_counter += 1
                 if patience_counter >= patience:
@@ -224,7 +234,7 @@ if __name__ == '__main__':
 
 
     # Evaluate on test set using the model with best validation loss
-    model.load_state_dict(torch.load('best_model.pth'))
+    model.load_state_dict(torch.load('best_model_main.pth'))
     model.eval()
     test_correct = 0
     test_total = 0

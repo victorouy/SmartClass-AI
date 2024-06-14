@@ -183,7 +183,7 @@ if __name__ == '__main__':
         print(f'Best Validation Accuracy: {BestACC:.2f}%')
 
     # Evaluate on test set
-    model.load_state_dict(torch.load('best_model.pth'))
+    model.load_state_dict(torch.load('best_model_main.pth'))
     model.eval()
     test_correct = 0
     test_total = 0
