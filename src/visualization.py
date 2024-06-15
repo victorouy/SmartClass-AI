@@ -12,7 +12,7 @@ import random
 def classDistribution(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
     # list of paths for the folders
-    directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
+    directories = [f'../dataset-cleaned/{expression}' for expression in classes]
 
     # Find nb of images in each class
     nb_images = [len(os.listdir(dir)) for dir in directories]
@@ -31,7 +31,7 @@ def pixelIntensityDistribution(dataset):
     # For the colors of the histograms
     colors = ['red', 'green', 'blue', 'gray']
     # list of paths for the folders
-    directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
+    directories = [f'../dataset-cleaned/{expression}' for expression in classes]
 
     plt.figure(figsize=(10, 10))
 
@@ -67,7 +67,7 @@ def pixelIntensityDistribution(dataset):
 def sampleImages(dataset):
     classes = ['angry', 'happy', 'engaged', 'neutral']
     #list of paths for the folders
-    directories = [f'../Data Cleaning/dataset/{dataset}/{expression}' for expression in classes]
+    directories = [f'../dataset-cleaned/{expression}' for expression in classes]
 
     for number, dir in enumerate(directories):
         fig, axes = plt.subplots(5, 6, figsize=(30, 16))
