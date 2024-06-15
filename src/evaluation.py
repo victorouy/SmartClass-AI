@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import os
 import PIL.Image as Image
 import torchvision.transforms as transforms
-from trainAI_3 import MultiLayerFCNet  # Import from trainAI_3
+from trainAI_main import MultiLayerFCNet 
 
 from sklearn.model_selection import train_test_split
 
