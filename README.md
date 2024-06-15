@@ -30,7 +30,7 @@ Evaluation Specialist: Victor-Thyreth Ouy
 
 Note: The following steps are assuming you are running our code with the same folder hierarchy as shown in our Github repository.
 
-### First step to executing any code. Creating a virtual environment using pip
+### First step to executing ANY code. You must create a virtual environment using pip
 
 1. Make sure you are in the root folder when typing commands in the terminal.
 2. Enter `py -m venv .venv` for Windows or `python3 -m venv .venv` for Unix/macOS.
@@ -47,3 +47,12 @@ Note: The following steps are assuming you are running our code with the same fo
 
 1. From the root folder, enter `cd src`.
 2. Enter `python visualization.py` to execute the script.
+
+### Steps to execute code for model training (Main model + variants)
+
+1. From the root folder, enter `cd src`.
+2. Enter `python split_dataset.py` to split dataset for which the models will train.
+3. Executing scripts for training models:
+   a. Main Model: enter `python trainAI_main.py`
+   b. Variant 1: enter `python variant1.py`
+   c. Variant 2: enter `python variant2.py`

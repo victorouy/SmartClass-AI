@@ -9,28 +9,6 @@ import PIL.Image as Image
 import torchvision.transforms as transforms
 from sklearn.model_selection import train_test_split
 
-# Function to load CIFAR10 dataset
-
-# def fetchData2():
-#     path = 'dataset-cleaned/'
-#     allaimges = []
-#     clsLabel = []
-
-#     for idx, cls in enumerate(['angry', 'engaged', 'happy', 'neutral']):
-#         Cpath = os.path.join(path, cls)
-#         F = os.listdir(Cpath)
-#         for im in F:
-#             allaimges.append(os.path.join(Cpath, im))
-#             clsLabel.append(idx)
-
-#     # Split data into 70% train and 30% temporary (to be split further into validation and test)
-#     X_train, X_temp, y_train, y_temp = train_test_split(allaimges, clsLabel, test_size=0.30, random_state=42, stratify=clsLabel)
-
-#     # Split the temporary set into 50% validation and 50% test (15% each of the total dataset)
-#     X_valid, X_test, y_valid, y_test = train_test_split(X_temp, y_temp, test_size=0.50, random_state=42, stratify=y_temp)
-
-#     return X_train, X_valid, X_test, y_train, y_valid, y_test
-
 class Pclass(Dataset):
     def __init__(self, X, y):
         self.allaimges= X
@@ -108,9 +86,7 @@ if __name__ == '__main__':
     output_size = 4  # Number of output classes (Our data set has 4 classes)
     epochs = 20
     patience = 3 
-
-    # X_train, X_valid, X_test, y_train, y_valid, y_test = fetchData2()
-
+    
     with open('../dataset_splits.pkl', 'rb') as f:
         splits = pickle.load(f)
 
