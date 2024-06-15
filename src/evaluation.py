@@ -16,14 +16,14 @@ class MultiLayerFCNet(nn.Module):
         # self.fc2 = nn.Linear(hidden_size, hidden_size)
         # self.fc3 = nn.Linear(hidden_size, output_size)
 
-        self.layer1=nn.Conv2d(1,32,3,padding=3,stride=1)
+        self.layer1=nn.Conv2d(1,32,3,padding=1,stride=1)
         self.B1 = nn.BatchNorm2d(32)
-        self.layer2 = nn.Conv2d(32, 32, 5, padding=2, stride=1)
+        self.layer2 = nn.Conv2d(32, 32, 3, padding=1, stride=1)
         self.B2 = nn.BatchNorm2d(32)
         self.Maxpool=nn.MaxPool2d(2)
         self.layer3 = nn.Conv2d(32, 64, 3, padding=1, stride=1)
         self.B3 = nn.BatchNorm2d(64)
-        self.layer4 = nn.Conv2d(64, 64, 7, padding=3, stride=1)
+        self.layer4 = nn.Conv2d(64, 64, 3, padding=1, stride=1)
         self.B4 = nn.BatchNorm2d(64)
 
         self.layer5 = nn.Conv2d(64, 128, 3, padding=1, stride=1)
@@ -31,6 +31,9 @@ class MultiLayerFCNet(nn.Module):
 
         self.layer6 = nn.Conv2d(128, 256, 3, padding=1, stride=1)
         self.B6 = nn.BatchNorm2d(256)
+        self.dropout = nn.Dropout(0.5)
+
+
 
 
 
@@ -51,9 +54,11 @@ class MultiLayerFCNet(nn.Module):
 
         x = self.B5((F.leaky_relu(self.layer5(x))))
         x = self.B6(self.Maxpool(F.leaky_relu(self.layer6(x))))
+        x = x.view(x.size(0), -1)
+        x = self.dropout(x)
 
 
-        return self.fc(x.view(x.size(0),-1))
+        return self.fc(x)
 
 class Pclass(Dataset):
     def __init__(self, X, y):
@@ -125,16 +130,16 @@ if __name__ == '__main__':
 
     if answer == "Dataset":
         test_loader = loadData()
-    elif answer =="single":
+    elif answer == "single":
         category = input("What category is your image:")
         if category == 'angry':
             idx = 0
         elif category == 'engaged':
             idx = 1
         elif category == 'happy':
-            idx = 3
+            idx = 2
         elif category == 'neutral':
-            idx = 4
+            idx = 3
         answer2 = input("Type the path of the file:")
         test_loader = loadimg(answer2, idx)
 
@@ -143,7 +148,7 @@ if __name__ == '__main__':
     model = MultiLayerFCNet(input_size, hidden_size, output_size)
     model = nn.DataParallel(model)
     model.to(device)
-    model.load_state_dict(torch.load('../best_model_main.pth'))
+    model.load_state_dict(torch.load('../models/best_model_main.pth'))
     model.eval()
     test_correct = 0
     test_total = 0
