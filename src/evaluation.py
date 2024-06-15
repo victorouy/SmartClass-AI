@@ -120,7 +120,7 @@ if __name__ == '__main__':
     input_size = 64 * 64  # 1 channel, 64x64 image size
     hidden_size = 50  # Number of hidden units
     output_size = 4  # Number of output classes (Our data set has 4 classes)
-
+    label = ""
     answer = input("Type \"Dataset\" to evaluate the full dataset or type \"single\" to evaluate:")
 
     if answer == "Dataset":
@@ -154,6 +154,8 @@ if __name__ == '__main__':
             _, predicted = torch.max(output.data, 1)
             test_total += labels.size(0)
             test_correct += (predicted == labels).sum().item()
+        if answer == "single":
+            _, predicted = torch.max(output.data, 1)
             for i in range(len(instances)):
                if predicted[i] == 0:
                     print("Predicted class is angry")
@@ -163,8 +165,8 @@ if __name__ == '__main__':
                    print("Predicted class is happy")
                if predicted[i] == 3:
                    print("Predicted class is neutral")
+            label = "Label of image is: " + category
 
     test_accuracy = 100 * test_correct / test_total
     print(f'Test Accuracy: {test_accuracy:.2f}%')
-    label = "Label of image is: " + category
     print(label)
