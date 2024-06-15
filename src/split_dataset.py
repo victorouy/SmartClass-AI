@@ -3,7 +3,7 @@ import pickle
 from sklearn.model_selection import train_test_split
 
 def fetchData():
-    path = 'dataset-cleaned/'
+    path = '../dataset-cleaned/'
     allaimges = []
     clsLabel = []
 
@@ -34,5 +34,5 @@ if __name__ == '__main__':
         'y_test': y_test
     }
     
-    with open('dataset_splits.pkl', 'wb') as f:
+    with open('../dataset_splits.pkl', 'wb') as f:
         pickle.dump(splits, f)

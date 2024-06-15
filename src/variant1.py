@@ -29,7 +29,7 @@ from sklearn.model_selection import train_test_split
 
 
 def fetchData2():
-    path = 'dataset-cleaned/'
+    path = '../dataset-cleaned/'
     allaimges = []
     clsLabel = []
 
@@ -128,11 +128,11 @@ if __name__ == '__main__':
     hidden_size = 50  # Number of hidden units
     output_size = 4  # Number of output classes (Our data set has 4 classes)
     epochs = 20
-    patience = 5 
+    patience = 3
 
 
     # X_train, X_valid, X_test, y_train, y_valid, y_test = fetchData2()
-    with open('dataset_splits.pkl', 'rb') as f:
+    with open('../dataset_splits.pkl', 'rb') as f:
         splits = pickle.load(f)
 
     X_train = splits['X_train']
@@ -204,7 +204,7 @@ if __name__ == '__main__':
             if val_loss < best_loss:
                 best_loss = val_loss
                 patience_counter = 0
-                torch.save(model.state_dict(), 'best_model_variant1.pth')
+                torch.save(model.state_dict(), '../models/best_model_variant1.pth')
             else:
                 patience_counter += 1
                 if patience_counter >= patience:
@@ -222,7 +222,7 @@ if __name__ == '__main__':
 
 
     # Evaluate on test set using the model with best validation loss
-    model.load_state_dict(torch.load('best_model_variant1.pth'))
+    model.load_state_dict(torch.load('../models/best_model_variant1.pth'))
     model.eval()
     test_correct = 0
     test_total = 0

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay, precision_score, recall_score, f1_score
 from torchvision.transforms import transforms
-from trainAI_3 import Pclass, MultiLayerFCNet  # Import from trainAI_3
+from trainAI_3 import MultiLayerFCNet  # Import from trainAI_3
 from variant1 import MultiLayerFCNet as Variant1Net  # Import from variant1
 from variant2 import MultiLayerFCNet as Variant2Net  # Import from variant2
 import pandas as pd
@@ -80,7 +80,7 @@ def evaluate_model(model_path, model_class):
 if __name__ == '__main__':
     print("Loading dataset splits...")
     # Load dataset splits
-    with open('dataset_splits.pkl', 'rb') as f:
+    with open('../dataset_splits.pkl', 'rb') as f:
         splits = pickle.load(f)
 
     X_test = splits['X_test']
@@ -98,11 +98,11 @@ if __name__ == '__main__':
 
     # Load and evaluate models
     print("Evaluating main model...")
-    main_acc, main_report, main_conf_matrix = evaluate_model('best_model_main.pth', MultiLayerFCNet)
+    main_acc, main_report, main_conf_matrix = evaluate_model('../models/best_model_main.pth', MultiLayerFCNet)
     print("Evaluating variant 1 model...")
-    variant1_acc, variant1_report, variant1_conf_matrix = evaluate_model('best_model_variant1.pth', Variant1Net)
+    variant1_acc, variant1_report, variant1_conf_matrix = evaluate_model('../models/best_model_variant1.pth', Variant1Net)
     print("Evaluating variant 2 model...")
-    variant2_acc, variant2_report, variant2_conf_matrix = evaluate_model('best_model_variant2.pth', Variant2Net)
+    variant2_acc, variant2_report, variant2_conf_matrix = evaluate_model('../models/best_model_variant2.pth', Variant2Net)
 
     # Plot confusion matrices
     for title, matrix in zip(["Main Model", "Variant 1", "Variant 2"], [main_conf_matrix, variant1_conf_matrix, variant2_conf_matrix]):
