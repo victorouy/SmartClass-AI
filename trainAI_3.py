@@ -96,12 +96,12 @@ class MultiLayerFCNet(nn.Module):
 
         self.layer1=nn.Conv2d(1,32,3,padding=3,stride=1)
         self.B1 = nn.BatchNorm2d(32)
-        self.layer2 = nn.Conv2d(32, 32, 3, padding=1, stride=1)
+        self.layer2 = nn.Conv2d(32, 32, 5, padding=2, stride=1)
         self.B2 = nn.BatchNorm2d(32)
         self.Maxpool=nn.MaxPool2d(2)
         self.layer3 = nn.Conv2d(32, 64, 3, padding=1, stride=1)
         self.B3 = nn.BatchNorm2d(64)
-        self.layer4 = nn.Conv2d(64, 64, 3, padding=1, stride=1)
+        self.layer4 = nn.Conv2d(64, 64, 7, padding=3, stride=1)
         self.B4 = nn.BatchNorm2d(64)
 
         self.layer5 = nn.Conv2d(64, 128, 3, padding=1, stride=1)
