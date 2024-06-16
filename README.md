@@ -56,3 +56,12 @@ Note: The following steps are assuming you are running our code with the same fo
    a. Main Model: enter `python trainAI_main.py`
    b. Variant 1: enter `python variant1.py`
    c. Variant 2: enter `python variant2.py`
+
+
+### Steps to load the model and test it on data
+
+1. From the root folder, enter `cd src`.
+2. Enter `python evaluation.py` to load the model.
+3. Type "Dataset" if you wanna test the whole dataset or "single" if you wanna predict a single image.
+4. If you typed "single", type the category of the image (angry, engaged, happy, or neutral).
+5. If you typed "single", then type the full filepath of the image you wish to predict.
