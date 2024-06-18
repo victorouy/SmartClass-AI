@@ -57,6 +57,11 @@ Note: The following steps are assuming you are running our code with the same fo
    b. Variant 1: enter `python variant1.py`
    c. Variant 2: enter `python variant2.py`
 
+### Steps to evaluate models
+
+1. You first need to train the models (in steps above)
+2. From the root folder, enter `cd src`.
+3. Enter `python evaluation_models.py`
 
 ### Steps to load the model and test it on data
 
@@ -64,4 +69,5 @@ Note: The following steps are assuming you are running our code with the same fo
 2. Enter `python evaluation.py` to load the model.
 3. Type "Dataset" if you wanna test the whole dataset or "single" if you wanna predict a single image.
 4. If you typed "single", type the category of the image (angry, engaged, happy, or neutral).
-5. If you typed "single", then type the full filepath of the image you wish to predict.
+5. If you typed "single", then type the full filepath of the image you wish to predict
+   c. Variant 2: enter `python variant2.py`
