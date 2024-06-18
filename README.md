@@ -48,7 +48,7 @@ Note: The following steps are assuming you are running our code with the same fo
 1. From the root folder, enter `cd src`.
 2. Enter `python visualization.py` to execute the script.
 
-### Steps to execute code for model training (Main model + variants)
+### Steps to execute code for model training (main model + variants)
 
 1. From the root folder, enter `cd src`.
 2. Enter `python split_dataset.py` to split dataset for which the models will train.
