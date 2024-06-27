@@ -11,6 +11,7 @@ def fetchData():
     allaimges = []
     clsLabel = []
 
+    # Get all images and labels
     for idx, cls in enumerate(['angry', 'engaged', 'happy', 'neutral']):
         Cpath = os.path.join(path, cls)
         F = os.listdir(Cpath)
@@ -29,7 +30,16 @@ if __name__ == '__main__':
         'labels': labels,
     }
 
+    # Save all images and labels to a pkl file
     with open('../full_dataset.pkl', 'wb') as f:
         pickle.dump(splits, f)
 
+    # Setting up K-fold
+    kfold = KFold(n_splits=10, shuffle=True, random_state=42)
+    # Split the dataset into folds
+    splits2 = list(kfold.split(images))
+
+    # Save all folds to a pkl file for future use
+    with open('../kfold_dataset.pkl', 'wb') as f:
+        pickle.dump(splits2, f)
 
