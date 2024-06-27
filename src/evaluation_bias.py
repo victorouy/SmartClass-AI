@@ -85,6 +85,8 @@ def evaluate_model(model_path, test_loader):
 # Main block
 if __name__ == '__main__':
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    model_path = input("Type the model name you would like to evaluate on the bias attributes (i.e. 'best_model_main.pth'): ")
+    model_path = '../models/' + model_path
 
     # Evaluate the main model on the bias attribute dataset
     age_groups = ['Young', 'Middle-aged', 'Senior']
@@ -113,7 +115,7 @@ if __name__ == '__main__':
         testset = Pclass(image_paths, labels)
         test_loader = DataLoader(testset, batch_size=64, shuffle=False, num_workers=8, drop_last=True)
 
-        accuracy, report, conf_matrix = evaluate_model('../models/best_model_main.pth', test_loader)
+        accuracy, report, conf_matrix = evaluate_model(model_path, test_loader)
 
         metrics['Age'][age_group]['#Images'] = len(image_paths)
         metrics['Age'][age_group]['Accuracy'] = accuracy
@@ -149,7 +151,7 @@ if __name__ == '__main__':
         testset = Pclass(image_paths, labels)
         test_loader = DataLoader(testset, batch_size=64, shuffle=False, num_workers=8, drop_last=True)
 
-        accuracy, report, conf_matrix = evaluate_model('../models/best_model_main.pth', test_loader)
+        accuracy, report, conf_matrix = evaluate_model(model_path, test_loader)
 
         metrics['Gender'][gender_group]['#Images'] = len(image_paths)
         metrics['Gender'][gender_group]['Accuracy'] = accuracy
@@ -186,7 +188,7 @@ if __name__ == '__main__':
         'Attribute': 'Overall System',
         'Group': 'Total/Average',
         '#Images': total_age_images + total_gender_images,
-        'Accuracy': (avg_precision_age + avg_precision_gender)/6,
+        'Accuracy': (avg_accuracy_age + avg_accuracy_gender)/6,
         'Precision': (avg_precision_age + avg_precision_gender)/6,
         'Recall': (avg_recall_age + avg_recall_gender)/6,
         'F1-Score': (avg_f1score_age + avg_f1score_gender)/6
