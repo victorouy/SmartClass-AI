@@ -77,12 +77,12 @@ if __name__ == '__main__':
     hidden_size = 50  # Number of hidden units
     output_size = 4  # Number of output classes (Our data set has 4 classes)
     label = ""
-    answer = input("Type \"dataset\" to evaluate the full dataset or type \"single\" to evaluate:")
+    answer = input("Type \"dataset\" to evaluate the full dataset or type \"single\" to evaluate: ")
 
     if answer == "dataset":
         test_loader = loadData()
     elif answer == "single":
-        category = input("What category is your image:")
+        category = input("What category is your image: ")
         if category == 'angry':
             idx = 0
         elif category == 'engaged':
@@ -91,7 +91,7 @@ if __name__ == '__main__':
             idx = 2
         elif category == 'neutral':
             idx = 3
-        answer2 = input("Type the path of the file:")
+        answer2 = input("Type the path of the file: ")
         test_loader = loadimg(answer2, idx)
 
 
