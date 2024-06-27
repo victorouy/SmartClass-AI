@@ -87,7 +87,7 @@ Note: The following steps are assuming you are running our code with the same fo
    b. Level 2: enter `python trainAI_bias2.py`
    c. Level 3: enter `python trainAI_bias3.py`
 4. Now, enter `python evaluation_bias.py` to evaluate the model based on the biases.
-   a. Enter the model name you would like to evaluate
+   * a. Enter the model name you would like to evaluate
    - Level 1: enter `model_bias1.pth`
    - Level 2: enter `model_bias2.pth`
    - Level 3: enter `model_bias3.pth`
