@@ -52,11 +52,11 @@ Note: The following steps are assuming you are running our code with the same fo
 
 1. From the root folder, enter `cd src`.
 2. Enter `python split_dataset.py` to split dataset for which the models will train.
-   a. Enter the relative path of the dataset you would like to split and train off of.
+   * a. Enter the relative path of the dataset you would like to split and train off of.
 3. Executing scripts for training models:
-   a. Main Model: enter `python trainAI_main.py`
-   b. Variant 1: enter `python variant1.py`
-   c. Variant 2: enter `python variant2.py`
+   * a. Main Model: enter `python trainAI_main.py`
+   * b. Variant 1: enter `python variant1.py`
+   * c. Variant 2: enter `python variant2.py`
 
 ### Steps to evaluate models
 
@@ -77,17 +77,17 @@ Note: The following steps are assuming you are running our code with the same fo
 
 1. From the root folder, enter `cd src`.
 2. You first need to split the training data.
-   a. Enter `python split_dataset.py` to split dataset.
-   b. Then you need to enter the relative path of the dataset (either one of the following):
-   - Level 1: enter `../dataset-bias_level1/`
-   - Level 2: enter `../dataset-bias_level2/`
-   - Level 3: enter `../dataset-bias_level3/`
+   * a. Enter `python split_dataset.py` to split dataset.
+   * b. Then you need to enter the relative path of the dataset (either one of the following):
+      - Level 1: enter `../dataset-bias_level1/`
+      - Level 2: enter `../dataset-bias_level2/`
+      - Level 3: enter `../dataset-bias_level3/`
 3. Create and train the bias models (either one of the following):
-   a. Level 1: enter `python trainAI_bias1.py`
-   b. Level 2: enter `python trainAI_bias2.py`
-   c. Level 3: enter `python trainAI_bias3.py`
+   * a. Level 1: enter `python trainAI_bias1.py`
+   * b. Level 2: enter `python trainAI_bias2.py`
+   * c. Level 3: enter `python trainAI_bias3.py`
 4. Now, enter `python evaluation_bias.py` to evaluate the model based on the biases.
    * a. Enter the model name you would like to evaluate
       - Level 1: enter `model_bias1.pth`
-   - Level 2: enter `model_bias2.pth`
-   - Level 3: enter `model_bias3.pth`
+      - Level 2: enter `model_bias2.pth`
+      - Level 3: enter `model_bias3.pth`
