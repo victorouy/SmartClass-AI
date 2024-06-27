@@ -91,3 +91,16 @@ Note: The following steps are assuming you are running our code with the same fo
       - Level 1: enter `model_bias1.pth`
       - Level 2: enter `model_bias2.pth`
       - Level 3: enter `model_bias3.pth`
+
+
+### Steps to training with k-fold cross-validation
+
+1. From the root folder, enter `cd src`.
+2. You first need to obtain the folds for the k-fold cross-validation.
+   * a. Enter `python kfolding.py` to obtain and save the folds.
+3. Then, train with k-fold cross-validation by entering `python kfold_train.py`.
+
+### Steps to evaluate the k-fold models.
+
+1. From the root folder, enter `cd src`.
+2. Enter `python evaluation_kfold.py` to obtain the performance metrics and confusion matrix.
