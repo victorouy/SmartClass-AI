@@ -3,7 +3,7 @@ import pickle
 from sklearn.model_selection import train_test_split
 
 def fetchData():
-    path = '../dataset-cleaned/'
+    path = input("Type the path of the dataset you would like to split (i.e. '../dataset-cleaned/'): ")
     allaimges = []
     clsLabel = []
 
