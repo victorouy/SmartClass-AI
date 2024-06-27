@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import os
 import PIL.Image as Image
 import torchvision.transforms as transforms
-from trainAI_main import MultiLayerFCNet 
+from variant1 import MultiLayerFCNet 
 
 from sklearn.model_selection import train_test_split
 
@@ -46,7 +46,7 @@ class Pclass(Dataset):
 
 
 def loadData():
-    path = '../dataset-cleaned/'
+    path = '../dataset/'
     allaimges = []
     clsLabel = []
 
@@ -77,9 +77,9 @@ if __name__ == '__main__':
     hidden_size = 50  # Number of hidden units
     output_size = 4  # Number of output classes (Our data set has 4 classes)
     label = ""
-    answer = input("Type \"Dataset\" to evaluate the full dataset or type \"single\" to evaluate:")
+    answer = input("Type \"dataset\" to evaluate the full dataset or type \"single\" to evaluate:")
 
-    if answer == "Dataset":
+    if answer == "dataset":
         test_loader = loadData()
     elif answer == "single":
         category = input("What category is your image:")
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     model = MultiLayerFCNet(input_size, hidden_size, output_size)
     model = nn.DataParallel(model)
     model.to(device)
-    model.load_state_dict(torch.load('../models/best_model_main.pth'))
+    model.load_state_dict(torch.load('../models/best_model_variant1.pth'))
     model.eval()
     test_correct = 0
     test_total = 0
