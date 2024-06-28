@@ -111,12 +111,6 @@ if __name__ == '__main__':
     plt.title('Aggregation of Kfold Models')
     plt.show()
 
-    # # Plot confusion matrices
-    # for title, matrix in zip(["Main Model", "Variant 1", "Variant 2"], [main_conf_matrix, variant1_conf_matrix, variant2_conf_matrix]):
-    #     disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=['angry', 'engaged', 'happy', 'neutral'])
-    #     disp.plot()
-    #     plt.title(title)
-    #     plt.show()
 
     # Summarize metrics in a table
     def extract_metrics(report):
