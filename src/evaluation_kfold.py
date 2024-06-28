@@ -31,6 +31,8 @@ def evaluate_model(model_path, model_class):
             y_pred.extend(predicted.cpu().numpy())
             y_true.extend(labels.cpu().numpy())
 
+    y_pred_conf = y_pred.copy()
+    y_true_conf = y_true.copy()
     y_pred = np.array(y_pred)
     y_true = np.array(y_true)
 
@@ -59,7 +61,7 @@ def evaluate_model(model_path, model_class):
         'recall': micro_recall,
         'f1-score': micro_f1
     }
-    return accuracy, report, conf_matrix
+    return accuracy, report, conf_matrix, y_pred_conf, y_true_conf
 
 
 if __name__ == '__main__':
@@ -78,6 +80,8 @@ if __name__ == '__main__':
     accs = []
     reports = []
     matrices = []
+    overall_preds = []
+    overall_labels = []
 
     for i, (train_index, test_index) in enumerate(folds):
         print(f'------------------------------\nModel {i+1}\n------------------------------')
@@ -91,17 +95,22 @@ if __name__ == '__main__':
         device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 
         # Load and evaluate models
-        main_acc, main_report, main_conf_matrix = evaluate_model(f'../kfold_models/model{i}.pth', MultiLayerFCNet)
+        main_acc, main_report, main_conf_matrix, y_predict, y_labels = evaluate_model(f'../kfold_models/model{i}.pth', MultiLayerFCNet)
         accs.append(main_acc)
         reports.append(main_report)
         matrices.append(main_conf_matrix)
+        overall_preds.extend(y_predict)
+        overall_labels.extend(y_labels)
 
-    # # Plot confusion matrices
-    # for title, matrix in zip(["Main Model", "Variant 1", "Variant 2"], [main_conf_matrix, variant1_conf_matrix, variant2_conf_matrix]):
-    #     disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=['angry', 'engaged', 'happy', 'neutral'])
-    #     disp.plot()
-    #     plt.title(title)
-    #     plt.show()
+    # make confusion matrix for aggregated kfold models
+    overall_preds = np.array(overall_preds)
+    overall_labels = np.array(overall_labels)
+    cm = confusion_matrix(overall_labels, overall_preds)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['angry', 'engaged', 'happy', 'neutral'])
+    disp.plot()
+    plt.title('Aggregation of Kfold Models')
+    plt.show()
+
 
     # Summarize metrics in a table
     def extract_metrics(report):
